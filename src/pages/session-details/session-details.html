@@ -1,0 +1,44 @@
+<ion-header>
+
+  <ion-navbar>
+
+    <ion-title>Session Details</ion-title>
+
+    <ion-buttons end>
+     <button ion-button (click)="goToAddBlock()">
+       <ion-icon ios="ios-add" md="md-add"></ion-icon>
+     </button>
+   </ion-buttons>
+
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+
+  <h6>{{session.Title}}</h6>
+  <p>{{session.Description}}</p>
+
+  <!--<ion-card *ngFor="let block of blocks">
+
+    <ion-card-header>
+      {{block.Title}}
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <div *ngFor="let part of block.Parts" >
+        <div [innerHTML]="part.Description"></div>
+        <p>{{part.Type}}</p>
+        <p>{{part.Mark}}</p>
+      </div>
+
+    </ion-card-content>
+
+  </ion-card>-->
+
+  <!--<template [ngIf]="!session?.Blocks">
+    No hay bloques en la sesión
+  </template>-->
+
+</ion-content>

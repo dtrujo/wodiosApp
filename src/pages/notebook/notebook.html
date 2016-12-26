@@ -1,0 +1,27 @@
+<ion-header>
+
+  <ion-navbar>
+
+    <ion-title>Notebook</ion-title>
+
+    <ion-buttons end>
+     <button ion-button (click)="goToAddTraning()" class="addtraning">
+       <ion-icon ios="ios-add" md="md-add"></ion-icon>
+     </button>
+   </ion-buttons>
+
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+
+  <ion-list>
+
+    <ion-item *ngFor="let training of trainings" (click)="trainingDetails(training.id)">
+      {{training.Title}} <br/> {{training.Date}}
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>
