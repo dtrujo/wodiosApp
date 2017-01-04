@@ -16,28 +16,33 @@
 
 <ion-content padding>
 
-  <h6>{{session.Title}}</h6>
-  <p>{{session.Description}}</p>
+  <h6>{{session.Title}} <br/> {{session.Date}}</h6>
 
-  <!--<ion-card *ngFor="let block of blocks">
+  <ion-card *ngFor="let block of blocks">
 
     <ion-card-header>
       {{block.Title}}
     </ion-card-header>
 
     <ion-card-content>
+      {{block.Description}}
+      <br/>
 
-      <div *ngFor="let part of block.Parts" >
-        <div [innerHTML]="part.Description"></div>
-        <p>{{part.Type}}</p>
-        <p>{{part.Mark}}</p>
-      </div>
+      <!--<ion-list *ngFor="let part of block.Parts">
+        <ion-item>
+          <p>{{part.Description}}</p>
+          <button right ion-button clear small> Edit </button>
+          <button right ion-button clear small> Value </button>
+        </ion-item>
+      </ion-list>-->
 
+      <!--<button right ion-button clear small> View </button>
+      <button right ion-button clear small (click)="goToAddPart(session.Id, block.Id)"> Add </button>-->
     </ion-card-content>
 
-  </ion-card>-->
+  </ion-card>
 
-  <!--<template [ngIf]="!session?.Blocks">
+  <!--<template [ngIf]="!session?.Blocks || session.Blocks.length == 0">
     No hay bloques en la sesión
   </template>-->
 

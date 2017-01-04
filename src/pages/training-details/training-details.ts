@@ -1,47 +1,52 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-
 import { SessionDetailsPage } from '../session-details/session-details';
 import { AddSessionPage } from '../add-session/add-session';
-
 import { TrainingData } from '../../providers/training-data';
-import { SessionData } from '../../providers/session-data';
 
 @Component({
   selector: 'page-training-details',
   templateUrl: 'training-details.html'
 })
-export class TrainingDetailsPage implements OnInit {
+export class TrainingDetailsPage implements OnInit, OnDestroy {
 
   training : any;
-  trainingId : any;
+  sessions : Array<any> = [];
+  sessionsSubs : any;
 
   /**
     Constructor
   */
   constructor( public navCtrl: NavController,
                public trainingData: TrainingData,
-               public sessionData: SessionData,
                public ngZone: NgZone,
                public params: NavParams ) {
 
-    // retrived friends params using NavParams
-    this.trainingId = this.params.get("id");
+    // retrived params using NavParams
+    this.training = this.params.get("training");
   }
 
   /**
     [ngOnInit description]
     This event fire any time when user access to the view
-    When fire we need to retrieved the trainingDetails calling
+    When fire we need to retrieved the sessions calling
     the services.
   */
   ngOnInit() {
-
-    this.trainingData.trainingDetails( this.trainingId ).subscribe ( training => {
+    this.sessionsSubs = this.trainingData.trainingSessions( this.training.Id ).subscribe ( session => {
       this.ngZone.run(() => {
-        this.training = training;
+        this.sessions.push(session);
       });
     });
+  }
+
+  /**
+    [ngOnDestroy description]
+    Destroy subscription when the view
+    is detroyed. Not duplicate responses
+  */
+  ngOnDestroy() {
+    this.sessionsSubs.unsubscribe();
   }
 
   /**
@@ -49,7 +54,7 @@ export class TrainingDetailsPage implements OnInit {
     go to add session page
   */
   goToAddSession() {
-    this.navCtrl.push( AddSessionPage, { id : this.trainingId } );
+    this.navCtrl.push( AddSessionPage, { id : this.training.Id } );
   }
 
   /**
@@ -58,7 +63,7 @@ export class TrainingDetailsPage implements OnInit {
 
     - id: the sessión's id
   */
-  sessionDetails( id ) {
-    this.navCtrl.push(SessionDetailsPage, { idSession : id });
+  sessionDetails( session ) {
+    this.navCtrl.push(SessionDetailsPage, { session : session });
   }
 }

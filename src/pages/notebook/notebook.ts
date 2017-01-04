@@ -15,6 +15,7 @@ import { TrainingData } from '../../providers/training-data';
 })
 export class NotebookPage implements OnInit {
 
+  // inizializate
   trainings : Array<any> = [];
 
   /**
@@ -56,7 +57,7 @@ export class NotebookPage implements OnInit {
     - id: the training's id
 
   */
-  trainingDetails( id ){
-    this.navCtrl.push( TrainingDetailsPage, { id : id } );
+  trainingDetails( training ){
+    this.navCtrl.push( TrainingDetailsPage, { training : training } );
   }
 }

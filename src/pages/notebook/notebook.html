@@ -18,7 +18,7 @@
 
   <ion-list>
 
-    <ion-item *ngFor="let training of trainings" (click)="trainingDetails(training.id)">
+    <ion-item *ngFor="let training of trainings" (click)="trainingDetails(training)">
       {{training.Title}} <br/> {{training.Date}}
     </ion-item>
 

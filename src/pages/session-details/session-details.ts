@@ -1,7 +1,8 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 import { AddBlockPage } from '../add-block/add-block';
+import { AddPartPage } from '../add-part/add-part';
 
 import { SessionData } from '../../providers/session-data';
 
@@ -9,10 +10,13 @@ import { SessionData } from '../../providers/session-data';
   selector: 'page-session-details',
   templateUrl: 'session-details.html'
 })
-export class SessionDetailsPage implements OnInit {
+export class SessionDetailsPage implements OnInit, OnDestroy {
 
+  //session : Array<any> = [];
   session : any;
-  sessionId : any;
+  parts : any [];
+  blocks : Array<any> = [];
+  blocksSubs : any;
 
   /**
   */
@@ -22,7 +26,7 @@ export class SessionDetailsPage implements OnInit {
                public params: NavParams ) {
 
     // retrived friends params using NavParams
-    this.sessionId = this.params.get("idSession");
+    this.session = this.params.get("session");
   }
 
   /**
@@ -32,11 +36,20 @@ export class SessionDetailsPage implements OnInit {
     the services.
   */
   ngOnInit() {
-    this.sessionData.sessionDetails( this.sessionId ).subscribe ( session => {
+    this.blocksSubs = this.sessionData.sessionBlocks( this.session.Id ).subscribe ( block => {
       this.ngZone.run(() => {
-        this.session = session;
+          this.blocks.push(block);
       });
     });
+  }
+
+  /**
+    [ngOnDestroy description]
+    Destroy subscription when the view
+    is detroyed. Not duplicate responses
+  */
+  ngOnDestroy() {
+    this.blocksSubs.unsubscribe();
   }
 
   /**
@@ -44,12 +57,15 @@ export class SessionDetailsPage implements OnInit {
     go to add block page
   */
   goToAddBlock(){
-    //this.navCtrl.push( AddBlockPage, { idTraining : this.trainingId, idSession : this.sessionId } );
+    this.navCtrl.push( AddBlockPage, { id : this.session.Id } );
   }
 
   /**
+    [goToAddPart description]
+    go to add part page
   */
-  ionViewDidLoad() {
-    console.log('Hello SessionDetailsPage Page');
+  goToAddPart( idSession , idBlock ){
+    console.log(idSession);
+    this.navCtrl.push( AddPartPage, { idSession : idSession, idBlock : idBlock } );
   }
 }

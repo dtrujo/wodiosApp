@@ -53,11 +53,4 @@ export class BlockDetailsPage {
       } ]
     }
   }
-
-  /**
-  */
-  ionViewDidLoad() {
-    console.log('Hello SessionDetailsPage Page');
-  }
-
 }

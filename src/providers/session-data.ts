@@ -12,8 +12,11 @@ import firebase from 'firebase';
 export class SessionData {
 
   fireAuth : any;
-  trainingsRef : any;
+  blocksRef : any;
   sessionsRef : any;
+  trainingsRef : any;
+  partsRef : any;
+
 
   /**
     [constructor description]
@@ -23,40 +26,57 @@ export class SessionData {
 
     this.trainingsRef = firebase.database().ref('/trainings');
     this.sessionsRef = firebase.database().ref('/sessions');
+    this.blocksRef = firebase.database().ref('/blocks');
+    this.partsRef = firebase.database().ref('/parts');
   }
 
   /**
-    [sessions description]
-    Get all trainings in the firebase database using observer
-    to detect when element has been added or modified.
+    [sessionDetails description]
+    Get details for specific session using session Id.
+
+    - id: the session's id
+
   */
   sessionDetails( id : string ): Observable<any> {
     return Observable.create( observer => {
 
-      // get training details
+      // get session details
       let listener = this.sessionsRef.child(id).on('value', sessionSnap => {
-
         let session = sessionSnap.val();
         session.Id = sessionSnap.key;
 
-        //session.Blocks = [];
-
-        // get sessions in this training
-        /*this.blockRef.orderByChild("Session").equalTo(session.Id).once('value', blocksSnap => {
-
-          // if have session, we need to convert [object, object] to array
-          if (blocksSnap.val())
-            session.Blocks = Object.keys(blocksSnap.val()).map(function(k){return blocksSnap.val()[k]});
-        });*/
-
         // pass observer next object
         observer.next(session);
-
       }, observer.error);
+
       return () => {
         this.sessionsRef.off('value', listener);
       };
+    });
+  }
 
+  /**
+    [sessionBlocks description]
+    Get blocks for specific session.
+    @param {string} id  [Session's id]
+  */
+  sessionBlocks( id : string ): Observable<any> {
+    return Observable.create( observer => {
+
+      // get training details
+      let listener = this.blocksRef.orderByChild("Session").equalTo(id).on('child_added', blockSnap => {
+
+        // get block and id
+        let block = blockSnap.val();
+        block.Id = blockSnap.key;
+
+        // pass observer next object
+        observer.next(block);
+      }, observer.error);
+
+      return () => {
+        this.blocksRef.off('child_added', listener);
+      };
     });
   }
 

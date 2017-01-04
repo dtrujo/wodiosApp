@@ -14,16 +14,12 @@ export class TrainingData {
   fireAuth : any;
   trainingsRef : any;
   sessionsRef : any;
-  trainingsRefByUser : any;
-
-  data: Observable<any>;
 
   /**
     [constructor description]
   */
   constructor(public http: Http) {
     this.fireAuth = firebase.auth();
-
     this.trainingsRef = firebase.database().ref('/trainings');
     this.sessionsRef = firebase.database().ref('/sessions');
   }
@@ -42,9 +38,10 @@ export class TrainingData {
       // get child training
       let listener = this.trainingsRef.orderByChild("User").equalTo(userId).on('child_added', snapshot => {
 
-        let data = snapshot.val();
-        data.id = snapshot.key;
-        observer.next(data);
+        // get training and id
+        let training = snapshot.val();
+        training.Id = snapshot.key;
+        observer.next(training);
 
       }, observer.error);
 
@@ -56,10 +53,8 @@ export class TrainingData {
 
   /**
     [trainingDetails description]
-    Get details for specific training session using training Id.
-
-    - id: the training's id
-
+    Get details for specific training.
+    @param {string} id  [Training's id]
   */
   trainingDetails( id : string ): Observable<any> {
     return Observable.create( observer => {
@@ -67,37 +62,51 @@ export class TrainingData {
       // get training details
       let listener = this.trainingsRef.child(id).on('value', trainingSnap => {
 
+        // get training and id
         let training = trainingSnap.val();
         training.Id = trainingSnap.key;
-        training.Sessions = [];
-
-        // get sessions in this training
-        this.sessionsRef.orderByChild("Training").equalTo(training.Id).once('value', sessionsSnap => {
-
-          // if have session, we need to convert [object, object] to array
-          if (sessionsSnap.val())
-            training.Sessions = Object.keys(sessionsSnap.val()).map(function(k){return sessionsSnap.val()[k]});
-        });
 
         // pass observer next object
         observer.next(training);
-
       }, observer.error);
+
       return () => {
         this.trainingsRef.off('value', listener);
       };
+    });
+  }
 
+  /**
+    [trainingSessions description]
+    Get sessions for specific training.
+    @param {string} id  [Training's id]
+  */
+  trainingSessions( id : string ): Observable<any> {
+    return Observable.create( observer => {
+
+      // get training details
+      let listener = this.sessionsRef.orderByChild("Training").equalTo(id).on('child_added', sessionSnap => {
+
+        // get session and id
+        let session = sessionSnap.val();
+        session.Id = sessionSnap.key;
+
+        // pass observer next object
+        observer.next(session);
+      }, observer.error);
+
+      return () => {
+        this.sessionsRef.off('child_added', listener);
+      };
     });
   }
 
   /**
     [addTraining description]
     add new training into notebook's list
-
-    - title: title of the training
-    - description: description of the training
-    - date: data when the training was created
-
+    @param  {string} title  [Training's title]
+    @param  {string} description  [Training's description]
+    @param  {string} date  [Training's date]
   */
   addTraining( title: string, description: string, date: string ){
     var userId = this.fireAuth.currentUser.uid;
@@ -107,17 +116,6 @@ export class TrainingData {
       Description: description,
       Date: date,
       User: userId
-    });
-  }
-
-  /**
-    [addBlock description]
-    add new block into training's list
-  */
-  addBlock( trainingId: string, sessionId: string, title: string, description: string ){
-    return this.trainingsRef.child( trainingId + "/Sessions/" + sessionId + "/Blocks" ).push({
-      Title: title,
-      Description: description
     });
   }
 }

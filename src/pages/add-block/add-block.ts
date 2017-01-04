@@ -4,10 +4,10 @@ import { NavController, AlertController, NavParams } from 'ionic-angular';
 
 import { SessionDetailsPage } from '../session-details/session-details';
 
-import { TrainingData } from '../../providers/training-data';
+import { BlockData } from '../../providers/block-data';
 
 /*
-  class for the AddSession page.
+  class for the add block page.
 */
 @Component({
   selector: 'page-add-block',
@@ -17,19 +17,17 @@ export class AddBlockPage {
 
   newBlockForm : any;
   sessionId : any;
-  trainingId : any;
 
   /**
-    Cosntructor
+    Constructor
   */
   constructor( public navCtrl: NavController,
-               public trainingData: TrainingData,
+               public blockData: BlockData,
                public alertCtrl: AlertController,
                public formBuilder: FormBuilder,
                public params: NavParams ) {
 
-     this.trainingId = this.params.get("idTraining");
-     this.sessionId = this.params.get("idSession");
+     this.sessionId = this.params.get("id");
 
      // validate form
      this.newBlockForm = formBuilder.group({
@@ -41,11 +39,11 @@ export class AddBlockPage {
 
   /**
     [addBlock description]
-    call to service for add new block in a session
+    call to service for add new block into a session
   */
   addBlock(){
-    this.trainingData.addBlock(
-      this.trainingId, this.sessionId,
+    this.blockData.addBlock(
+      this.sessionId,
       this.newBlockForm.value.title,
       this.newBlockForm.value.description).then(() => {
         this.navCtrl.pop( );
@@ -62,12 +60,5 @@ export class AddBlockPage {
 
       alert.present();
     });
-  }
-
-  /**
-
-  */
-  ionViewDidLoad() {
-    console.log('Hello AddBlockPage Page');
   }
 }

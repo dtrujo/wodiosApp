@@ -23,6 +23,7 @@ import { BlockDetailsPage } from '../pages/block-details/block-details';
 import { AddTrainingPage } from '../pages/add-training/add-training';
 import { AddSessionPage } from '../pages/add-session/add-session';
 import { AddBlockPage } from '../pages/add-block/add-block';
+import { AddPartPage } from '../pages/add-part/add-part';
 
 import { AuthData } from '../providers/auth-data';
 import { ExerciseData } from '../providers/exercise-data';
@@ -30,6 +31,8 @@ import { StorageData } from '../providers/storage-data';
 import { FriendsData } from '../providers/friends-data';
 import { TrainingData } from '../providers/training-data';
 import { SessionData } from '../providers/session-data';
+import { BlockData } from '../providers/block-data';
+import { PartData } from '../providers/part-data';
 
 import { ObjectToArray } from '../pipes/objectToArray';
 
@@ -57,6 +60,8 @@ import { ObjectToArray } from '../pipes/objectToArray';
     AddTrainingPage,
     AddSessionPage,
     AddBlockPage,
+    AddSessionPage,
+    AddPartPage,
     ObjectToArray
   ],
   imports: [
@@ -85,6 +90,7 @@ import { ObjectToArray } from '../pipes/objectToArray';
     BlockDetailsPage,
     AddTrainingPage,
     AddSessionPage,
+    AddPartPage,
     AddBlockPage
   ],
   providers: [
@@ -92,6 +98,8 @@ import { ObjectToArray } from '../pipes/objectToArray';
     AuthData,
     TrainingData,
     SessionData,
+    BlockData,
+    PartData,
     ExerciseData,
     StorageData,
     FriendsData
