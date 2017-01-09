@@ -70,6 +70,27 @@ export class SessionData {
         let block = blockSnap.val();
         block.Id = blockSnap.key;
 
+        // if the block has parts
+        if (block.Parts){
+          let parts = [];
+
+          // around all parts in the block
+          for (var key in block.Parts) {
+              if (!block.Parts.hasOwnProperty(key))
+                continue;
+
+              // retrived parts details
+              this.partsRef.child(key).on('value', partSnap => {
+                let part = partSnap.val();
+                part.Id = partSnap.key;
+                parts.push(part);
+              });
+          }
+
+          // add parts into parts blocks
+          block.Parts = parts;
+        }
+
         // pass observer next object
         observer.next(block);
       }, observer.error);
@@ -100,18 +121,16 @@ export class SessionData {
       Training: trainingId
     };
 
-    // Get a key for a new session.
+    // get a key for a new session.
     var newSessionsKey = this.sessionsRef.push().key;
 
-    // Write the new sessions's data simultaneously
+    // write the new sessions's data simultaneously
     // in the sessions list and the user's session list.
     var updates = {};
     updates['/sessions/' + newSessionsKey] = sessionData;
+    updates['/trainings/' + trainingId + '/Sessions/' + newSessionsKey] = true;
 
     // update
-    firebase.database().ref().update(updates);
-
-    // add new id in the session field of the specific training
-    return this.trainingsRef.child(trainingId + '/Sessions/').push({ Id: newSessionsKey });
+    return firebase.database().ref().update(updates);
   }
 }

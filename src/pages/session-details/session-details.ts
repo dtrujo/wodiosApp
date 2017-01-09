@@ -11,7 +11,7 @@ import { SessionData } from '../../providers/session-data';
   templateUrl: 'session-details.html'
 })
 export class SessionDetailsPage implements OnInit, OnDestroy {
-
+ 
   //session : Array<any> = [];
   session : any;
   parts : any [];
@@ -64,8 +64,7 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
     [goToAddPart description]
     go to add part page
   */
-  goToAddPart( idSession , idBlock ){
-    console.log(idSession);
-    this.navCtrl.push( AddPartPage, { idSession : idSession, idBlock : idBlock } );
+  goToAddPart( idBlock ){
+    this.navCtrl.push( AddPartPage, { idBlock : idBlock } );
   }
 }

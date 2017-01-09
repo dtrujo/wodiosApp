@@ -73,20 +73,29 @@ export class PartData {
     [addPart description]
     add new block into session
 
-    - blockId : the id of the block.
+    - idBlock : the id of the block.
     - title: title of the part.
     - description: description of the part.
 
   */
-  addPart( idSession: string, idBlock: string, description: string, type: string ){
+  addPart( idBlock: string, description: string, type: string ){
 
-    // A session entry.
+    // a part entry
     var partData = {
+      Block : idBlock,
       Description: description,
       Type: type
     };
 
-    // add new id in the part field of the specific block
-    return this.sessionsRef.child(idSession + '/Blocks/' + idBlock + '/Parts/').push(partData);
+    // get a key for a new part.
+    var newPartKey = this.partsRef.push().key;
+
+    // write the new parts's data simultaneously
+    // in the parts list and the block's parts list.
+    var updates = {};
+    updates['/parts/' + newPartKey] = partData;
+    updates['/blocks/' + idBlock + '/Parts/' + newPartKey] = true;
+
+    return firebase.database().ref().update(updates);
   }
 }

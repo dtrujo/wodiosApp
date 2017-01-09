@@ -79,13 +79,22 @@ export class BlockData {
   */
   addBlock( sessionId : string, title: string, description: string ){
 
-    // A block entry.
+    // A block entry
     var blockData = {
+      Session : sessionId,
       Title: title,
       Description: description
     };
 
-    // add new block of the specific session
-    return this.sessionsRef.child(sessionId + '/Blocks/').push( blockData );
+    // get a key for a new block
+    var newBlockKey = this.blocksRef.push().key;
+
+    // write the new block's data simultaneously
+    // in the blocks list and the sessions's blocks list.
+    var updates = {};
+    updates['/blocks/' + newBlockKey] = blockData;
+    updates['/sessions/' + sessionId + '/Blocks/' + newBlockKey] = true;
+
+    return firebase.database().ref().update(updates);
   }
 }
