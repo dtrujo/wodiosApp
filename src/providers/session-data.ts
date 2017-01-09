@@ -14,7 +14,6 @@ export class SessionData {
   fireAuth : any;
   blocksRef : any;
   sessionsRef : any;
-  trainingsRef : any;
   partsRef : any;
 
 
@@ -24,7 +23,6 @@ export class SessionData {
   constructor(public http: Http) {
     this.fireAuth = firebase.auth();
 
-    this.trainingsRef = firebase.database().ref('/trainings');
     this.sessionsRef = firebase.database().ref('/sessions');
     this.blocksRef = firebase.database().ref('/blocks');
     this.partsRef = firebase.database().ref('/parts');
