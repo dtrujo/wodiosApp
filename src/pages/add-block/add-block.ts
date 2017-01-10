@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, AlertController, NavParams } from 'ionic-angular';
-
 import { SessionDetailsPage } from '../session-details/session-details';
-
 import { BlockData } from '../../providers/block-data';
 
 /*
@@ -42,7 +40,7 @@ export class AddBlockPage {
     call to service for add new block into a session
   */
   addBlock(){
-    this.blockData.addBlock(
+    this.blockData.add(
       this.sessionId,
       this.newBlockForm.value.title,
       this.newBlockForm.value.description).then(() => {

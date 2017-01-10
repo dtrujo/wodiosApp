@@ -28,41 +28,51 @@ export class PartData {
   }
 
   /**
-    [partDetails description]
+    [parts description]
+    Get parts for specific block.
+    @param {string} id  [Block's id]
+  */
+  parts( id : string ): Observable<any> {
+    return Observable.create( observer => {
+
+      // get training details
+      let listener = this.partsRef.orderByChild("Block").equalTo(id).on('child_added', partSnap => {
+
+        // get part and id
+        let part = partSnap.val();
+        part.Id = partSnap.key;
+
+        // pass observer next object
+        observer.next(part);
+      }, observer.error);
+
+      return () => {
+        this.sessionsRef.off('child_added', listener);
+      };
+    });
+  }
+
+  /**
+    [details description]
     Get details for specific part using block Id.
 
     - id: the part's id
 
   */
-  partDetails( id : string ): Observable<any> {
+  details( id : string ): Observable<any> {
     return Observable.create( observer => {
 
       // get part details
       let listener = this.partsRef.child(id).on('value', partSnap => {
 
+        // get part value and add id using key
         let part = partSnap.val();
         part.Id = partSnap.key;
-
-        // control if the training has sessions
-        /*if (block.Parts){
-
-          // clear the blocks array
-          block.Parts = [];
-
-          // get sessions in this training
-          this.partsRef.orderByChild("Part").equalTo(block.Id).once('value', partsSnap => {
-
-            // if have session, we need to convert [object, object] to array
-            if (partsSnap.val())
-              block.Parts = Object.keys(partsSnap.val()).map(function(k){return partsSnap.val()[k]});
-          });
-        }*/
 
         // pass observer next object
         observer.next(part);
 
       }, observer.error);
-
       return () => {
         this.partsRef.off('value', listener);
       };
@@ -70,7 +80,7 @@ export class PartData {
   }
 
   /**
-    [addPart description]
+    [add description]
     add new block into session
 
     - idBlock : the id of the block.
@@ -78,7 +88,7 @@ export class PartData {
     - description: description of the part.
 
   */
-  addPart( idBlock: string, description: string, type: string ){
+  add( idBlock: string, description: string, type: string ){
 
     // a part entry
     var partData = {

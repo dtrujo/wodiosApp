@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, AlertController, NavParams } from 'ionic-angular';
-
 import { BlockDetailsPage } from '../block-details/block-details';
-
 import { PartData } from '../../providers/part-data';
 
 /*
@@ -43,7 +41,7 @@ export class AddPartPage {
     call to service for add new part into a block
   */
   addPart( idBlock ){
-    this.partData.addPart(
+    this.partData.add(
       this.idBlock,
       this.newPartForm.value.description,
       'type').then(() => {

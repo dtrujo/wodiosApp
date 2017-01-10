@@ -52,11 +52,11 @@ export class TrainingData {
   }
 
   /**
-    [trainingDetails description]
+    [details description]
     Get details for specific training.
     @param {string} id  [Training's id]
   */
-  trainingDetails( id : string ): Observable<any> {
+  details( id : string ): Observable<any> {
     return Observable.create( observer => {
 
       // get training details
@@ -77,38 +77,13 @@ export class TrainingData {
   }
 
   /**
-    [trainingSessions description]
-    Get sessions for specific training.
-    @param {string} id  [Training's id]
-  */
-  trainingSessions( id : string ): Observable<any> {
-    return Observable.create( observer => {
-
-      // get training details
-      let listener = this.sessionsRef.orderByChild("Training").equalTo(id).on('child_added', sessionSnap => {
-
-        // get session and id
-        let session = sessionSnap.val();
-        session.Id = sessionSnap.key;
-
-        // pass observer next object
-        observer.next(session);
-      }, observer.error);
-
-      return () => {
-        this.sessionsRef.off('child_added', listener);
-      };
-    });
-  }
-
-  /**
-    [addTraining description]
+    [add description]
     add new training into notebook's list
     @param  {string} title  [Training's title]
     @param  {string} description  [Training's description]
     @param  {string} date  [Training's date]
   */
-  addTraining( title: string, description: string, date: string ){
+  add( title: string, description: string, date: string ){
     var userId = this.fireAuth.currentUser.uid;
 
     return this.trainingsRef.push({

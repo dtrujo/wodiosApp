@@ -38,7 +38,7 @@ export class AddTrainingPage {
     call to service for add new training in the database
   */
   addTraining(){
-    this.trainingData.addTraining(
+    this.trainingData.add(
       this.newTrainingForm.value.title,
       this.newTrainingForm.value.description,
       this.newTrainingForm.value.date).then(() => {
