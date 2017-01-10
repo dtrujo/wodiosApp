@@ -2,7 +2,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
 import { StorageData } from './storage-data';
 import firebase from 'firebase';
 

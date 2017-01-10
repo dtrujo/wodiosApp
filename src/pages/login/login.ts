@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, LoadingController, AlertController } from 'ionic-angular';
-
-//import { TabsPage } from '../tabs/tabs';
 import { SignupPage } from '../signup/signup';
 import { HomePage } from '../home/home';
 import { TabsPage } from '../tabs/tabs';
 import { ResetPasswordPage } from '../resetpassword/resetpassword';
-
 import { AuthData } from '../../providers/auth-data';
 
 /**

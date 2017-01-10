@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, AlertController } from 'ionic-angular';
-
 import { NotebookPage } from '../notebook/notebook';
-
 import { TrainingData } from '../../providers/training-data';
 
 /**

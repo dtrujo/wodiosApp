@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, AlertController, NavParams } from 'ionic-angular';
-
 import { TrainingDetailsPage } from '../training-details/training-details';
-
 import { SessionData } from '../../providers/session-data';
 
 /*

@@ -1,7 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { FriendDetails } from '../friend-details/friend-details';
-
 import { FriendsData } from '../../providers/friends-data';
 
 @Component({
