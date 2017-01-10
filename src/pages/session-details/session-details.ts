@@ -66,7 +66,8 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
     [goToAddPart description]
     go to add part page
   */
-  goToAddPart( idBlock ){
-    this.navCtrl.push( AddPartPage, { idBlock : idBlock } );
+  goToAddPart( idSession , idBlock ){
+    console.log(idSession);
+    this.navCtrl.push( AddPartPage, { idSession : idSession, idBlock : idBlock } );
   }
 }

@@ -26,9 +26,10 @@ export class AddPartPage {
                public formBuilder: FormBuilder,
                public params: NavParams ) {
 
-     // get block id
+     this.idSession = this.params.get("idSession");
      this.idBlock = this.params.get("idBlock");
 
+     console.log(this.idSession);
 
      // validate form
      this.newPartForm = formBuilder.group({
@@ -40,6 +41,7 @@ export class AddPartPage {
     [addPArt description]
     call to service for add new part into a block
   */
+
   addPart( idBlock ){
     this.partData.add(
       this.idBlock,
