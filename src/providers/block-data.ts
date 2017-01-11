@@ -132,4 +132,42 @@ export class BlockData {
 
     return firebase.database().ref().update(updates);
   }
+
+  /**
+    [checkRemovePart description]
+    create trigger if a part has been deleted
+  */
+  checkRemovePart( ): Observable<any> {
+    return Observable.create(observer => {
+
+      let listener = this.blocksRef.child('/Parts').on('child_removed', snapshot => {
+        observer.next(snapshot.key);
+      }, observer.error);
+
+      return () => {
+        this.blocksRef.off('child_removed', listener);
+      };
+    })
+  }
+
+  /**
+    [removePart description]
+    delete part in two diferente secction
+    at the same time using updated value
+
+    - partId : part's id
+    - blockId : block's id
+
+  */
+  removePart( blockId : string, partId : string ){
+
+    // delete part in parts node and parts of the block
+    // updating route by null
+    var updates = {};
+    updates['/blocks/' + blockId  + '/Parts/' + partId] = null;
+    updates['/parts/' + partId ] = null;
+
+    return firebase.database().ref().update(updates);
+  }
+
 }

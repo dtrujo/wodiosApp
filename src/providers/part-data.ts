@@ -12,7 +12,6 @@ export class PartData {
 
   fireAuth : any;
   partsRef : any;
-  blocksRef : any;
   sessionsRef : any;
 
   /**
@@ -22,7 +21,6 @@ export class PartData {
     this.fireAuth = firebase.auth();
 
     this.partsRef = firebase.database().ref('/parts');
-    this.blocksRef = firebase.database().ref('/blocks');
     this.sessionsRef = firebase.database().ref('/sessions');
   }
 
@@ -107,4 +105,16 @@ export class PartData {
 
     return firebase.database().ref().update(updates);
   }
+
+  /**
+    [remove description]
+    delete exercise of the list
+
+    - id: part's id
+  */
+  remove( id: string ){
+    this.partsRef.child( id).remove();
+    return true;
+  }
+
 }

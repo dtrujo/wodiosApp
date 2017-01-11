@@ -11,12 +11,13 @@ import { BlockData } from '../../providers/block-data';
 })
 export class SessionDetailsPage implements OnInit, OnDestroy {
 
-  //session : Array<any> = [];
   session : any;
   parts : any [];
   blocks : Array<any> = [];
+
   blocksSubs : any;
   blocksUpdateSubs : any;
+  partsDeleteSubs : any;
 
   /**
   */
@@ -28,6 +29,13 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
 
     // retrived friends params using NavParams
     this.session = this.params.get("session");
+
+    // remove of the part's list the value
+    // which was removed in firebase.
+    this.partsDeleteSubs = this.blockData.checkRemovePart().subscribe((id) => {
+      console.log( id );
+    });
+
   }
 
   /**
@@ -66,8 +74,18 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
     [goToAddPart description]
     go to add part page
   */
-  goToAddPart( idSession , idBlock ){
-    console.log(idSession);
-    this.navCtrl.push( AddPartPage, { idSession : idSession, idBlock : idBlock } );
+  goToAddPart( idBlock ){
+    this.navCtrl.push( AddPartPage, { idBlock : idBlock } );
   }
+
+  /**
+    [deletePart description]
+    remove part to the block list
+
+    - id: part's id
+  */
+  deletePart ( idBlock, idPart ){
+    this.blockData.removePart(  idBlock, idPart );
+  }
+
 }

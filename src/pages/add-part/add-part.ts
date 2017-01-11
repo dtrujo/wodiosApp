@@ -26,10 +26,7 @@ export class AddPartPage {
                public formBuilder: FormBuilder,
                public params: NavParams ) {
 
-     this.idSession = this.params.get("idSession");
      this.idBlock = this.params.get("idBlock");
-
-     console.log(this.idSession);
 
      // validate form
      this.newPartForm = formBuilder.group({
