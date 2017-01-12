@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, AlertController, NavParams } from 'ionic-angular';
-
 import { TrainingDetailsPage } from '../training-details/training-details';
-
 import { SessionData } from '../../providers/session-data';
 
 /*
@@ -43,7 +41,7 @@ export class AddSessionPage {
     call to service for add new session in a training
   */
   addSession(){
-    this.sessionData.addSession(
+    this.sessionData.add(
       this.trainingId,
       this.newSessionForm.value.title,
       this.newSessionForm.value.description,

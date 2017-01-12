@@ -2,7 +2,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { Http } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
 import { AuthData } from './auth-data';
 import firebase from 'firebase';
 
@@ -34,7 +33,7 @@ export class FriendsData {
 
       var userId = this.fireAuth.currentUser.uid;
       this.friendsRef = this.userProfile.child(userId + '/friends');
-      
+
       let listener = this.friendsRef.on('child_added', snapshot => {
 
         // get friend information

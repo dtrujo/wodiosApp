@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
-
 import { AuthData } from '../../providers/auth-data';
 import { StorageData } from '../../providers/storage-data';
-
 import firebase from 'firebase';
 
 /**

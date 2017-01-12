@@ -1,9 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
-
 import { TrainingDetailsPage } from '../training-details/training-details';
 import { AddTrainingPage } from '../add-training/add-training';
-
 import { TrainingData } from '../../providers/training-data';
 
 /**

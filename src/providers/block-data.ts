@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
+import { PartData } from '../providers/part-data';
 import firebase from 'firebase';
+
 
 /**
   Class for the TrainingData provider.
@@ -18,7 +19,7 @@ export class BlockData {
   /**
     [constructor description]
   */
-  constructor(public http: Http) {
+  constructor( public partData: PartData, public http: Http ) {
     this.fireAuth = firebase.auth();
 
     this.blocksRef = firebase.database().ref('/blocks');
@@ -26,13 +27,49 @@ export class BlockData {
   }
 
   /**
-    [blockDetails description]
+    [blocks description]
+    Get blocks for specific session.
+    @param {string} id  [Session's id]
+  */
+  blocks( id : string ): Observable<any> {
+    return Observable.create( observer => {
+
+      // get training details
+      let listener = this.blocksRef.orderByChild("Session").equalTo(id).on('child_added', blockSnap => {
+
+        // get block and id
+        let block = blockSnap.val();
+        block.Id = blockSnap.key;
+
+        // create empty parts to retrive parts
+        let parts = [];
+
+        // call service and subscriber to complete parts
+        this.partData.parts( block.Id ).subscribe((data) => {
+          parts.push(data);
+        });
+
+        // add parts into parts blocks
+        block.Parts = parts;
+
+        // pass observer next object
+        observer.next(block);
+
+      }, observer.error);
+      return () => {
+        this.blocksRef.off('child_added', listener);
+      };
+    });
+  }
+
+  /**
+    [details description]
     Get details for specific block using session Id.
 
     - id: the block's id
 
   */
-  blockDetails( id : string ): Observable<any> {
+  details( id : string ): Observable<any> {
     return Observable.create( observer => {
 
       // get training details
@@ -67,7 +104,7 @@ export class BlockData {
   }
 
   /**
-    [addblock description]
+    [add description]
     add new block into session
 
     - sessionId : the id of the session.
@@ -75,7 +112,7 @@ export class BlockData {
     - description: description of the block.
 
   */
-  addBlock( sessionId : string, title: string, description: string ){
+  add( sessionId : string, title: string, description: string ){
 
     // A block entry
     var blockData = {
@@ -95,4 +132,42 @@ export class BlockData {
 
     return firebase.database().ref().update(updates);
   }
+
+  /**
+    [checkRemovePart description]
+    create trigger if a part has been deleted
+  */
+  checkRemovePart( ): Observable<any> {
+    return Observable.create(observer => {
+
+      let listener = this.blocksRef.child('/Parts').on('child_removed', snapshot => {
+        observer.next(snapshot.key);
+      }, observer.error);
+
+      return () => {
+        this.blocksRef.off('child_removed', listener);
+      };
+    })
+  }
+
+  /**
+    [removePart description]
+    delete part in two diferente secction
+    at the same time using updated value
+
+    - partId : part's id
+    - blockId : block's id
+
+  */
+  removePart( blockId : string, partId : string ){
+
+    // delete part in parts node and parts of the block
+    // updating route by null
+    var updates = {};
+    updates['/blocks/' + blockId  + '/Parts/' + partId] = null;
+    updates['/parts/' + partId ] = null;
+
+    return firebase.database().ref().update(updates);
+  }
+
 }

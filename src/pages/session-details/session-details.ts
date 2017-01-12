@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-
 import { AddBlockPage } from '../add-block/add-block';
 import { AddPartPage } from '../add-part/add-part';
-
 import { SessionData } from '../../providers/session-data';
+import { BlockData } from '../../providers/block-data';
 
 @Component({
   selector: 'page-session-details',
@@ -12,21 +11,31 @@ import { SessionData } from '../../providers/session-data';
 })
 export class SessionDetailsPage implements OnInit, OnDestroy {
 
-  //session : Array<any> = [];
   session : any;
   parts : any [];
   blocks : Array<any> = [];
+
   blocksSubs : any;
+  blocksUpdateSubs : any;
+  partsDeleteSubs : any;
 
   /**
   */
   constructor( public navCtrl: NavController,
                public sessionData: SessionData,
+               public blockData: BlockData,
                public ngZone: NgZone,
                public params: NavParams ) {
 
     // retrived friends params using NavParams
     this.session = this.params.get("session");
+
+    // remove of the part's list the value
+    // which was removed in firebase.
+    this.partsDeleteSubs = this.blockData.checkRemovePart().subscribe((id) => {
+      console.log( id );
+    });
+
   }
 
   /**
@@ -36,7 +45,7 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
     the services.
   */
   ngOnInit() {
-    this.blocksSubs = this.sessionData.sessionBlocks( this.session.Id ).subscribe ( block => {
+    this.blocksSubs = this.blockData.blocks( this.session.Id ).subscribe ( block => {
       this.ngZone.run(() => {
           this.blocks.push(block);
       });
@@ -50,6 +59,7 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
   */
   ngOnDestroy() {
     this.blocksSubs.unsubscribe();
+    //this.blocksUpdateSubs.unsubscribe();
   }
 
   /**
@@ -64,8 +74,18 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
     [goToAddPart description]
     go to add part page
   */
-  goToAddPart( idSession , idBlock ){
-    console.log(idSession);
-    this.navCtrl.push( AddPartPage, { idSession : idSession, idBlock : idBlock } );
+  goToAddPart( idBlock ){
+    this.navCtrl.push( AddPartPage, { idBlock : idBlock } );
   }
+
+  /**
+    [deletePart description]
+    remove part to the block list
+
+    - id: part's id
+  */
+  deletePart ( idBlock, idPart ){
+    this.blockData.removePart(  idBlock, idPart );
+  }
+
 }

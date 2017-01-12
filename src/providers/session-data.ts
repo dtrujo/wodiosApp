@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
 import firebase from 'firebase';
 
 /**
@@ -29,13 +28,38 @@ export class SessionData {
   }
 
   /**
+    [sessions description]
+    Get sessions for specific training.
+    @param {string} id  [Training's id]
+  */
+  sessions( id : string ): Observable<any> {
+    return Observable.create( observer => {
+
+      // get training details
+      let listener = this.sessionsRef.orderByChild("Training").equalTo(id).on('child_added', sessionSnap => {
+
+        // get session and id
+        let session = sessionSnap.val();
+        session.Id = sessionSnap.key;
+
+        // pass observer next object
+        observer.next(session);
+      }, observer.error);
+
+      return () => {
+        this.sessionsRef.off('child_added', listener);
+      };
+    });
+  }
+
+  /**
     [sessionDetails description]
     Get details for specific session using session Id.
 
     - id: the session's id
 
   */
-  sessionDetails( id : string ): Observable<any> {
+  details( id : string ): Observable<any> {
     return Observable.create( observer => {
 
       // get session details
@@ -54,52 +78,6 @@ export class SessionData {
   }
 
   /**
-    [sessionBlocks description]
-    Get blocks for specific session.
-    @param {string} id  [Session's id]
-  */
-  sessionBlocks( id : string ): Observable<any> {
-    return Observable.create( observer => {
-
-      // get training details
-      let listener = this.blocksRef.orderByChild("Session").equalTo(id).on('child_added', blockSnap => {
-
-        // get block and id
-        let block = blockSnap.val();
-        block.Id = blockSnap.key;
-
-        // if the block has parts
-        if (block.Parts){
-          let parts = [];
-
-          // around all parts in the block
-          for (var key in block.Parts) {
-              if (!block.Parts.hasOwnProperty(key))
-                continue;
-
-              // retrived parts details
-              this.partsRef.child(key).on('value', partSnap => {
-                let part = partSnap.val();
-                part.Id = partSnap.key;
-                parts.push(part);
-              });
-          }
-
-          // add parts into parts blocks
-          block.Parts = parts;
-        }
-
-        // pass observer next object
-        observer.next(block);
-      }, observer.error);
-
-      return () => {
-        this.blocksRef.off('child_added', listener);
-      };
-    });
-  }
-
-  /**
     [addTraining description]
     add new training into notebook's list
 
@@ -109,7 +87,7 @@ export class SessionData {
     - date: date session.
 
   */
-  addSession( trainingId : string, title: string, description: string, date: string ){
+  add( trainingId : string, title: string, description: string, date: string ){
 
     // A session entry.
     var sessionData = {

@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { SessionDetailsPage } from '../session-details/session-details';
 import { AddSessionPage } from '../add-session/add-session';
 import { TrainingData } from '../../providers/training-data';
+import { SessionData } from '../../providers/session-data';
 
 @Component({
   selector: 'page-training-details',
@@ -19,6 +20,7 @@ export class TrainingDetailsPage implements OnInit, OnDestroy {
   */
   constructor( public navCtrl: NavController,
                public trainingData: TrainingData,
+               public sessionData: SessionData,
                public ngZone: NgZone,
                public params: NavParams ) {
 
@@ -33,7 +35,7 @@ export class TrainingDetailsPage implements OnInit, OnDestroy {
     the services.
   */
   ngOnInit() {
-    this.sessionsSubs = this.trainingData.trainingSessions( this.training.Id ).subscribe ( session => {
+    this.sessionsSubs = this.sessionData.sessions( this.training.Id ).subscribe ( session => {
       this.ngZone.run(() => {
         this.sessions.push(session);
       });

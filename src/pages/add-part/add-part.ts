@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, AlertController, NavParams } from 'ionic-angular';
-
 import { BlockDetailsPage } from '../block-details/block-details';
-
 import { PartData } from '../../providers/part-data';
 
 /*
@@ -28,10 +26,7 @@ export class AddPartPage {
                public formBuilder: FormBuilder,
                public params: NavParams ) {
 
-     this.idSession = this.params.get("idSession");
      this.idBlock = this.params.get("idBlock");
-
-     console.log(this.idSession);
 
      // validate form
      this.newPartForm = formBuilder.group({
@@ -43,9 +38,9 @@ export class AddPartPage {
     [addPArt description]
     call to service for add new part into a block
   */
-  addPart( idSession, idBlock ){
-    this.partData.addPart(
-      this.idSession,
+
+  addPart( idBlock ){
+    this.partData.add(
       this.idBlock,
       this.newPartForm.value.description,
       'type').then(() => {
