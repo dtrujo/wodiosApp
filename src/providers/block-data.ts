@@ -133,14 +133,49 @@ export class BlockData {
     return firebase.database().ref().update(updates);
   }
 
+
   /**
-    [checkRemovePart description]
+    [remove description]
+    delete block in two diferente section
+    at the same time using updated value
+
+    - sessionId : session's id
+    - blockId : block's id
+
+  */
+  remove( sessionId : string, blockId : string ){
+
+    // copy $scope to call into firebase service
+    var _this = this;
+
+    // delete block in blocks node and blocks of the session
+    // updating route by null
+    var updates = {};
+
+    updates['/sessions/' + sessionId  + '/Blocks/' + blockId] = null;
+    updates['/blocks/' + blockId ] = null;
+
+    // delete all part before to delete the blockId
+    // because if we delete the block, we need
+    // to delete parts in the correct list
+    this.partsRef.orderByChild('Block').equalTo(blockId).once("value", function(partSnap){
+       partSnap.forEach(function(part){
+          _this.partData.remove(blockId, part.key);
+       });
+    });
+
+    // delete values
+    return firebase.database().ref().update(updates);
+  }
+
+  /**
+    [removed description]
     create trigger if a part has been deleted
   */
-  checkRemovePart( ): Observable<any> {
+  removed( ): Observable<any> {
     return Observable.create(observer => {
 
-      let listener = this.blocksRef.child('/Parts').on('child_removed', snapshot => {
+      let listener = this.blocksRef.on('child_removed', snapshot => {
         observer.next(snapshot.key);
       }, observer.error);
 
@@ -149,25 +184,4 @@ export class BlockData {
       };
     })
   }
-
-  /**
-    [removePart description]
-    delete part in two diferente secction
-    at the same time using updated value
-
-    - partId : part's id
-    - blockId : block's id
-
-  */
-  removePart( blockId : string, partId : string ){
-
-    // delete part in parts node and parts of the block
-    // updating route by null
-    var updates = {};
-    updates['/blocks/' + blockId  + '/Parts/' + partId] = null;
-    updates['/parts/' + partId ] = null;
-
-    return firebase.database().ref().update(updates);
-  }
-
 }

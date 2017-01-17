@@ -4,6 +4,7 @@ import { AddBlockPage } from '../add-block/add-block';
 import { AddPartPage } from '../add-part/add-part';
 import { SessionData } from '../../providers/session-data';
 import { BlockData } from '../../providers/block-data';
+import { PartData } from '../../providers/part-data';
 
 @Component({
   selector: 'page-session-details',
@@ -16,26 +17,51 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
   blocks : Array<any> = [];
 
   blocksSubs : any;
-  blocksUpdateSubs : any;
   partsDeleteSubs : any;
+  blocksDeleteSubs : any;
 
   /**
+  * Constructor
   */
   constructor( public navCtrl: NavController,
                public sessionData: SessionData,
                public blockData: BlockData,
+               public partData: PartData,
                public ngZone: NgZone,
                public params: NavParams ) {
 
     // retrived friends params using NavParams
     this.session = this.params.get("session");
 
-    // remove of the part's list the value
+    // remove the part of the list the value
     // which was removed in firebase.
-    this.partsDeleteSubs = this.blockData.checkRemovePart().subscribe((id) => {
-      console.log( id );
+    this.partsDeleteSubs = this.partData.removed().subscribe( id => {
+      this.ngZone.run(() => {
+        let i = 0;
+        this.blocks.forEach(function(block) {
+          block.Parts.forEach(function(part) {
+            if (id == part.Id)
+              block.Parts.splice(i, 1);
+            i++;
+          });
+          i = 0;
+        });
+      });
     });
 
+    // remove the block of the list the value
+    // which was removed in firebase.
+    this.blocksDeleteSubs = this.blockData.removed().subscribe( id => {
+      this.ngZone.run(() => {
+        let i = 0, index = 0;
+        this.blocks.forEach(function(block) {
+            if (id == block.Id)
+              index = i;
+            i++;
+        });
+        this.blocks.splice(index, 1);
+      });
+    });
   }
 
   /**
@@ -59,7 +85,8 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
   */
   ngOnDestroy() {
     this.blocksSubs.unsubscribe();
-    //this.blocksUpdateSubs.unsubscribe();
+    this.blocksDeleteSubs.unsubscribe();
+    this.partsDeleteSubs.unsubscribe();
   }
 
   /**
@@ -82,10 +109,22 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
     [deletePart description]
     remove part to the block list
 
-    - id: part's id
+    - idBlock: block's id
+    - idPart: part's id
   */
   deletePart ( idBlock, idPart ){
-    this.blockData.removePart(  idBlock, idPart );
+    this.partData.remove(  idBlock, idPart );
   }
 
+  /**
+    [deleteBlock description]
+    remove block to the session list
+
+    - idSession: session's id
+    - idBlock: block's id
+
+  */
+  deleteBlock ( idSession, idBlock ){
+    this.blockData.remove(  idSession, idBlock );
+  }
 }

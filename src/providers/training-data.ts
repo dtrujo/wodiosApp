@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import firebase from 'firebase';
+import { SessionData } from '../providers/session-data';
 
 /**
   Class for the TrainingData provider.
@@ -13,13 +14,16 @@ export class TrainingData {
   fireAuth : any;
   trainingsRef : any;
   sessionsRef : any;
+  blocksRef : any;
 
   /**
     [constructor description]
   */
-  constructor(public http: Http) {
+  constructor( public sessionData: SessionData , public http: Http) {
+
     this.fireAuth = firebase.auth();
     this.trainingsRef = firebase.database().ref('/trainings');
+    this.blocksRef = firebase.database().ref('/blocks');
     this.sessionsRef = firebase.database().ref('/sessions');
   }
 
@@ -46,6 +50,27 @@ export class TrainingData {
 
       return () => {
         this.trainingsRef.off('child_added', listener);
+      };
+    });
+  }
+
+  /**
+    [update description]
+    add event to check when one node has been updated
+  */
+  update(): Observable<any> {
+    return Observable.create(observer => {
+
+      let listener = this.trainingsRef.on('child_changed', snapshot => {
+
+        let value = snapshot.val();
+        value.id = snapshot.key;
+        observer.next(value);
+
+      }, observer.error);
+
+      return () => {
+        this.trainingsRef.off('child_changed', listener);
       };
     });
   }
@@ -91,5 +116,54 @@ export class TrainingData {
       Date: date,
       User: userId
     });
+  }
+
+  /**
+    [remove description]
+    delete training in the diferent sections
+    at the same time using updated value
+    @param {training} training [training to delete]
+  */
+  remove( training : any ){
+
+    // copy this to call into firebase service
+    var _this = this;
+
+    // delete training in trainings node
+    var updates = {};
+
+    //updates['/trainings/' + session.Training  + '/Sessions/' + session.Id] = null;
+    updates['/trainings/' + training.Id ] = null;
+
+    // delete all part before to delete the blockId
+    // because if we delete the block, we need
+    // to delete parts in the correct list
+    this.sessionsRef.orderByChild('Training').equalTo(training.Id).once("value", function(sessionSnap){
+       sessionSnap.forEach(function(data){
+          let session = data.val();
+          session.Id = data.key;
+          _this.sessionData.remove(session);
+       });
+    });
+
+    // delete
+    return firebase.database().ref().update(updates);
+  }
+
+  /**
+    [removed description]
+    create trigger if a training has been deleted
+  */
+  removed(): Observable<any> {
+    return Observable.create(observer => {
+
+      let listener = this.trainingsRef.on('child_removed', snapshot => {
+        observer.next(snapshot.key);
+      }, observer.error);
+
+      return () => {
+        this.trainingsRef.off('child_removed', listener);
+      };
+    })
   }
 }

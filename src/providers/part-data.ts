@@ -108,13 +108,38 @@ export class PartData {
 
   /**
     [remove description]
-    delete exercise of the list
+    delete part in two diferente secction
+    at the same time using updated value
 
-    - id: part's id
+    - partId : part's id
+    - blockId : block's id
+
   */
-  remove( id: string ){
-    this.partsRef.child( id).remove();
-    return true;
+  remove( blockId : string, partId : string ){
+
+    // delete part in parts node and parts of the block
+    // updating route by null
+    var updates = {};
+    updates['/blocks/' + blockId  + '/Parts/' + partId] = null;
+    updates['/parts/' + partId ] = null;
+
+    return firebase.database().ref().update(updates);
   }
 
+  /**
+    [removed description]
+    create trigger if a part has been deleted
+  */
+  removed( ): Observable<any> {
+    return Observable.create(observer => {
+
+      let listener = this.partsRef.on('child_removed', snapshot => {
+        observer.next(snapshot.key);
+      }, observer.error);
+
+      return () => {
+        this.partsRef.off('child_removed', listener);
+      };
+    })
+  }
 }
