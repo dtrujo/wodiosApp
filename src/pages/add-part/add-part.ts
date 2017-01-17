@@ -37,8 +37,8 @@ export class AddPartPage {
   /**
     [addPArt description]
     call to service for add new part into a block
+    @param {string} idBlock [block's id]
   */
-
   addPart( idBlock ){
     this.partData.add(
       this.idBlock,

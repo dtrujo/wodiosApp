@@ -77,10 +77,10 @@ export class SessionData {
   /**
     [addTraining description]
     add new training into notebook's list
-    @param {string} trainingId [the training's is]
-    @param {string} title [of the session]
-    @param {string} description [of the session]
-    @param {string} date [session]
+    @param {string} trainingId   [the training's is]
+    @param {string} title        [of the session]
+    @param {string} description  [of the session]
+    @param {string} date         [session]
   */
   add( trainingId : string, title: string, description: string, date: string ){
 

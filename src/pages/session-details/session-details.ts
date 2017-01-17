@@ -11,7 +11,6 @@ import { PartData } from '../../providers/part-data';
   templateUrl: 'session-details.html'
 })
 export class SessionDetailsPage implements OnInit, OnDestroy {
-
   session : any;
   parts : any [];
   blocks : Array<any> = [];
@@ -100,6 +99,7 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
   /**
     [goToAddPart description]
     go to add part page
+    @param {string} idBlock [block's id]
   */
   goToAddPart( idBlock ){
     this.navCtrl.push( AddPartPage, { idBlock : idBlock } );
@@ -108,9 +108,8 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
   /**
     [deletePart description]
     remove part to the block list
-
-    - idBlock: block's id
-    - idPart: part's id
+    @param {string} idBlock [block's id]
+    @param {string} idPart  [part's id]
   */
   deletePart ( idBlock, idPart ){
     this.partData.remove(  idBlock, idPart );
@@ -119,10 +118,8 @@ export class SessionDetailsPage implements OnInit, OnDestroy {
   /**
     [deleteBlock description]
     remove block to the session list
-
-    - idSession: session's id
-    - idBlock: block's id
-
+    @param {string} idSession [session's id]
+    @param {string} idBlock   [block's id]
   */
   deleteBlock ( idSession, idBlock ){
     this.blockData.remove(  idSession, idBlock );

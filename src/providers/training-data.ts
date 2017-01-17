@@ -103,9 +103,9 @@ export class TrainingData {
   /**
     [add description]
     add new training into notebook's list
-    @param  {string} title  [Training's title]
+    @param  {string} title        [Training's title]
     @param  {string} description  [Training's description]
-    @param  {string} date  [Training's date]
+    @param  {string} date         [Training's date]
   */
   add( title: string, description: string, date: string ){
     var userId = this.fireAuth.currentUser.uid;
@@ -132,7 +132,6 @@ export class TrainingData {
     // delete training in trainings node
     var updates = {};
 
-    //updates['/trainings/' + session.Training  + '/Sessions/' + session.Id] = null;
     updates['/trainings/' + training.Id ] = null;
 
     // delete all part before to delete the blockId

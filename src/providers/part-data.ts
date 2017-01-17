@@ -9,7 +9,6 @@ import firebase from 'firebase';
 */
 @Injectable()
 export class PartData {
-
   fireAuth : any;
   partsRef : any;
   sessionsRef : any;
@@ -52,9 +51,7 @@ export class PartData {
   /**
     [details description]
     Get details for specific part using block Id.
-
-    - id: the part's id
-
+    @param {string} id  [part's id]
   */
   details( id : string ): Observable<any> {
     return Observable.create( observer => {
@@ -79,11 +76,9 @@ export class PartData {
   /**
     [add description]
     add new block into session
-
-    - idBlock : the id of the block.
-    - title: title of the part.
-    - description: description of the part.
-
+    @param {string} idBlock  [Block's id]
+    @param {string} description  [description of the part]
+    @param {string} type  [type of exercise]
   */
   add( idBlock: string, description: string, type: string ){
 
@@ -110,10 +105,8 @@ export class PartData {
     [remove description]
     delete part in two diferente secction
     at the same time using updated value
-
-    - partId : part's id
-    - blockId : block's id
-
+    @param {string} blockId  [Block's id]
+    @param {string} partId   [Part's id]
   */
   remove( blockId : string, partId : string ){
 

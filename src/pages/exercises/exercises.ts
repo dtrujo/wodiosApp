@@ -166,8 +166,8 @@ export class ExercisesPage implements OnInit, OnDestroy {
     [exerciseTapped description]
     When user click over event we need to launch modal view
     to complete action, change pr value or cancel.
-    @param event    [which fire]
-    @param exercise [exercise pressed]
+    @param {event} event       [which fire]
+    @param {exercise} exercise [exercise pressed]
   */
   exerciseTapped(event, exercise) {
 
@@ -180,6 +180,7 @@ export class ExercisesPage implements OnInit, OnDestroy {
   /**
     [removeExercise description]
     remove the exercise which selected
+    @param {exercise} exercise [exercise pressed]
   */
   removeExercise(exercise) {
     this.exerciseData.removeExercise(exercise.id);

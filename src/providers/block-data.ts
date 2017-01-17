@@ -5,13 +5,11 @@ import 'rxjs/add/operator/map';
 import { PartData } from '../providers/part-data';
 import firebase from 'firebase';
 
-
 /**
   Class for the TrainingData provider.
 */
 @Injectable()
 export class BlockData {
-
   fireAuth : any;
   blocksRef : any;
   partsRef : any;
@@ -65,9 +63,7 @@ export class BlockData {
   /**
     [details description]
     Get details for specific block using session Id.
-
-    - id: the block's id
-
+    @param {string} id [the block's id]
   */
   details( id : string ): Observable<any> {
     return Observable.create( observer => {
@@ -106,11 +102,9 @@ export class BlockData {
   /**
     [add description]
     add new block into session
-
-    - sessionId : the id of the session.
-    - title: title of the block.
-    - description: description of the block.
-
+    @param {string} sessionId   [the id of the session]
+    @param {string} title       [title of the block]
+    @param {string} description [description of the block]
   */
   add( sessionId : string, title: string, description: string ){
 
@@ -133,15 +127,12 @@ export class BlockData {
     return firebase.database().ref().update(updates);
   }
 
-
   /**
     [remove description]
     delete block in two diferente section
     at the same time using updated value
-
-    - sessionId : session's id
-    - blockId : block's id
-
+    @param {string} sessionId [session's id]
+    @param {string} blockId   [block's id]
   */
   remove( sessionId : string, blockId : string ){
 
