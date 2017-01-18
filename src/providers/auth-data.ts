@@ -39,11 +39,11 @@ export class AuthData {
     the Firebase app, once it does it's going to log the user in and create a node on
     userProfile/uid with the user's email address, you can use
     that node to store the profile information.
-    @param  {string} email    [User's email address]
-    @param  {string} password [User's password]
-    @param  {string} username [User's username]
-    @param  {string} name     [User's name]
-    @param  {string} surname  [User's surname]
+    @param {string} email    [User's email address]
+    @param {string} password [User's password]
+    @param {string} username [User's username]
+    @param {string} name     [User's name]
+    @param {string} surname  [User's surname]
   */
   signupUser( email: string, password: string, username: string, name: string, surname: string): any {
     return this.fireAuth.createUserWithEmailAndPassword(email, password).then((newUser) => {
@@ -93,7 +93,7 @@ export class AuthData {
     This function will take the user's email address and send a password reset
     link, then Firebase will handle the email reset part, you won't have
     to do anything else.
-    @param  {string} email [User's email address]
+    @param {string} email [User's email address]
   */
   resetPassword( email: string ): any {
     return this.fireAuth.sendPasswordResetEmail(email);
@@ -111,7 +111,7 @@ export class AuthData {
     [user description]
     get all user information using the id. We need access to image url
     using storage method in the firebase storage lib.
-    @param  {string} id [User's id to retrive information]
+    @param {string} id [User's id to retrive information]
   */
   user( id: string ): any{
     return Observable.create(observer => {

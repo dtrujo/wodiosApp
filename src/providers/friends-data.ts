@@ -7,7 +7,6 @@ import firebase from 'firebase';
 
 @Injectable()
 export class FriendsData {
-
   fireAuth : any;
   userProfile : any;
   friendsRef: any;

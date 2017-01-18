@@ -10,10 +10,10 @@ import { SessionData } from '../../providers/session-data';
   templateUrl: 'training-details.html'
 })
 export class TrainingDetailsPage implements OnInit, OnDestroy {
-
   training : any;
   sessions : Array<any> = [];
   sessionsSubs : any;
+  sessionDeleteSubs : any;
 
   /**
     Constructor
@@ -26,6 +26,20 @@ export class TrainingDetailsPage implements OnInit, OnDestroy {
 
     // retrived params using NavParams
     this.training = this.params.get("training");
+
+    // remove the session of the list the value
+    // which was removed in firebase.
+    this.sessionDeleteSubs = this.sessionData.removed().subscribe( id => {
+      this.ngZone.run(() => {
+        let i = 0, index = 0;
+        this.sessions.forEach(function(session) {
+            if (id == session.Id)
+              index = i;
+            i++;
+        });
+        this.sessions.splice(index, 1);
+      });
+    });
   }
 
   /**
@@ -49,6 +63,7 @@ export class TrainingDetailsPage implements OnInit, OnDestroy {
   */
   ngOnDestroy() {
     this.sessionsSubs.unsubscribe();
+    this.sessionDeleteSubs.unsubscribe();
   }
 
   /**
@@ -62,10 +77,18 @@ export class TrainingDetailsPage implements OnInit, OnDestroy {
   /**
     [sessionDetails description]
     go to sesion details page
-
-    - id: the sessión's id
+    @param {session} session get details
   */
   sessionDetails( session ) {
     this.navCtrl.push(SessionDetailsPage, { session : session });
+  }
+
+  /**
+    [deleteSession description]
+    remove session to the training list
+    @param {session} session delete
+  */
+  deleteSession ( session ){
+    this.sessionData.remove( session );
   }
 }

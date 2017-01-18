@@ -6,7 +6,6 @@ import firebase from 'firebase';
 
 @Injectable()
 export class ExerciseData {
-
   fireAuth : any;
   userProfile : any;
   exercisesRef: any;
@@ -91,6 +90,10 @@ export class ExerciseData {
   /**
     [updatePR description]
     update pr value using actual param.
+    @param {string} exerciseId [exercise's id]
+    @param {number} newPr      [value of the new pr]
+    @param {string} type       [type of the value]
+    @param {string} unit       [unit of the value]
   */
   updatePr( exerciseId: string, newPr: number, type: string, unit: string ): any {
     var userId = this.fireAuth.currentUser.uid;
@@ -106,6 +109,10 @@ export class ExerciseData {
   /**
     [addExercise description]
     add new exercise into exercise's list
+    @param {string} exerciseId [exercise's id]
+    @param {number} newPr      [value of the new pr]
+    @param {string} type       [type of the value]
+    @param {string} unit       [unit of the value]
   */
   addExercise( name: string, pr: number, type: string, unit: string ){
     var userId = this.fireAuth.currentUser.uid;
@@ -122,6 +129,7 @@ export class ExerciseData {
   /**
     [removeExercise description]
     delete exercise of the list
+    @param {string} id  [exercise's id] 
   */
   removeExercise( id: string ){
     var userId = this.fireAuth.currentUser.uid;

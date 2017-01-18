@@ -26,6 +26,7 @@
 
     <ion-card-content>
       {{session.Description}}
+      <button right ion-button clear small (click)="deleteSession( session )"> Delete </button>
       <button right ion-button clear small (click)="sessionDetails( session )"> View </button>
     </ion-card-content>
 

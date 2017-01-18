@@ -10,7 +10,6 @@ import { ExerciseData } from '../../providers/exercise-data';
   templateUrl: 'pr.html'
 })
 export class PrPage {
-
   newPrForm: any;
   exercise: any;
   types : any;
@@ -54,6 +53,7 @@ export class PrPage {
   /**
     [updatePr description]
     call firebase service to update pr value
+    @param {string} exerciseId [exercise's id]
   */
   updatePr(exerciseId){
 
